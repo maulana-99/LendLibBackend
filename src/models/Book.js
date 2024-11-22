@@ -2,11 +2,6 @@ const mongoose = require("mongoose");
 
 const bookSchema = new mongoose.Schema(
   {
-    code: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     title: {
       type: String,
       required: true,
@@ -31,7 +26,7 @@ const bookSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    langguage: {
+    language: {
       type: String,
       required: true,
     },

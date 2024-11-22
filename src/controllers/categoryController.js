@@ -8,7 +8,7 @@ exports.createCategory = async (req, res, next) => {
       address: categoryExists._id,
     });
     if (categoryExists) {
-      return res.status(400).json({ message: "This category is already add" });
+      return res.status(400).json({ message: "This category is already added" });
     }
 
     const category = await Category.create({
