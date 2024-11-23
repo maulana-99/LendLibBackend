@@ -144,3 +144,23 @@ exports.updateStaff = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getStaffById = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const staff = await Staff.findById(id).populate('user');
+    
+    if (!staff) {
+      return res.status(404).json({ message: "Staff tidak ditemukan" });
+    }
+
+    res.status(200).json({ 
+      message: "Staff berhasil ditemukan",
+      data: staff 
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};

@@ -129,3 +129,17 @@ exports.updateMember = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getMemberById = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const member = await Member.findById(id).populate('user');
+    if (!member) {
+      return res.status(404).json({ message: "Member tidak ditemukan" });
+    }
+    res.status(200).json({ member });
+  } catch (error) {
+    next(error);
+  }
+};
