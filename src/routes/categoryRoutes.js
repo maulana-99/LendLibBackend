@@ -6,12 +6,13 @@ const {
   getCategoryById,
   updateCategory,
 } = require("../controllers/categoryController");
-const { protect } = require("../middlewares/authMiddleware");
+const { protect, protectStaff } = require("../middlewares/authMiddleware");
 const router = express.Router();
 
-router.post("/create", protect, createCategory);
-router.put("/update/:id", protect, updateCategory);
+router.post("/create", protect, protectStaff, createCategory);
+router.put("/update/:id", protect, protectStaff, updateCategory);
 router.get("/", getCategory);
 router.get("/:id", getCategoryById);
+router.delete("/:id", protect, protectStaff, deleteCategory);
 
 module.exports = router;

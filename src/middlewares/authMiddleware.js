@@ -17,7 +17,7 @@ const protect = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(401).json({ message: "Not authorized, token failed" });
+    return res.status(401).json({ message: "Not authorized, token failed" });
   }
 };
 
@@ -36,8 +36,7 @@ const protectStaff = async (req, res, next) => {
     req.staff = staff;
     next();
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error", error });
+    next(error);
   }
 };
 

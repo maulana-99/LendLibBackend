@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const getDataFromToken = require("../utils/tokenUtils");
 
 exports.registerUser = async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -23,15 +24,28 @@ exports.loginUser = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
+    // Cari pengguna berdasarkan email
     const user = await User.findOne({ email });
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+    // Buat token JWT yang menyertakan email
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.EXPIRED_TOKEN }
+    );
+
+    res.json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+      },
     });
-    res.json({ message: "Login successful", token });
   } catch (error) {
     next(error);
   }
