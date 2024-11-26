@@ -1,7 +1,6 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const getDataFromToken = require("../utils/tokenUtils");
 
 exports.registerUser = async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -74,5 +73,29 @@ exports.getUserById = async (req, res, next) => {
     res.status(200).json({ user });
   } catch (error) {
     next(error);
+  }
+};
+
+exports.getUserFromToken = (req, res) => {
+  // Ambil token dari header Authorization
+  const token = req.headers.authorization?.split(" ")[1];
+
+  // Jika token tidak ada
+  if (!token) {
+    return res.status(401).json({ message: "Not authorized, no token" });
+  }
+
+  try {
+    // Verifikasi dan decode token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Kembalikan data yang ada di dalam token
+    res.json({
+      message: "Token successfully decoded",
+      user: decoded, // Data pengguna dari token (misalnya id, email, dll)
+    });
+  } catch (error) {
+    // Jika token tidak valid
+    return res.status(401).json({ message: "Invalid or expired token" });
   }
 };

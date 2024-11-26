@@ -12,6 +12,7 @@ const memberRoutes = require("./routes/memberRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const bookRoutes = require("./routes/bookRoutes");
 const borrowRoutes = require("./routes/borrowRoutes");
+const returnRoutes = require("./routes/returnRoutes");
 
 dotenv.config();
 connectDB();
@@ -32,6 +33,7 @@ app.use("/api/member", memberRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/book", bookRoutes);
 app.use("/api/borrow", borrowRoutes);
+app.use("/api/return", returnRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
