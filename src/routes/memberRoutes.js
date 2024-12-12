@@ -9,6 +9,6 @@ const router = express.Router();
 
 router.post("/create", protect, protectStaff, createMember);
 router.put("/update/:id", protect, protectStaff, updateMember);
-router.get("/", protect, getMember);
+router.get("/", getMember);
 
 module.exports = router;
