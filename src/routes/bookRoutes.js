@@ -5,12 +5,11 @@ const {
     updateBook,
     getBooksByCategoryId,
 } = require("../controllers/bookController");
-const { protect, protectStaff } = require("../middlewares/authMiddleware");
 const router = express.Router();
 
-router.post("/create", protect, protectStaff, createBook);
-router.put("/update/:id", protect, protectStaff, updateBook);
+router.post("/create", createBook);
+router.put("/update/:id", updateBook);
 router.get("/", getBooks);
-router.get("/category/id/:categoryId", protect, protectStaff, getBooksByCategoryId);
+router.get("/category/id/:categoryId", getBooksByCategoryId);
 
 module.exports = router;

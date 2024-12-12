@@ -1,6 +1,8 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const Member = require("../models/Member");
+const Staff = require("../models/Staff");
 
 exports.registerUser = async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -19,6 +21,7 @@ exports.registerUser = async (req, res, next) => {
   }
 };
 
+
 exports.loginUser = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -29,9 +32,27 @@ exports.loginUser = async (req, res, next) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // Buat token JWT yang menyertakan email
+    // Cari apakah pengguna terkait dengan Member atau Staff
+    let role = null;
+    let roleData = null;
+
+    // Check for Member role
+    const member = await Member.findOne({ user: user._id });
+    if (member) {
+      role = "member";
+      roleData = member;
+    }
+
+    // Check for Staff role
+    const staff = await Staff.findOne({ user: user._id });
+    if (staff) {
+      role = "staff";
+      roleData = staff;
+    }
+
+    // Buat token JWT yang menyertakan email dan role
     const token = jwt.sign(
-      { id: user._id, email: user.email },
+      { id: user._id, email: user.email, role, roleData },
       process.env.JWT_SECRET,
       { expiresIn: process.env.EXPIRED_TOKEN }
     );
@@ -43,6 +64,8 @@ exports.loginUser = async (req, res, next) => {
         id: user._id,
         email: user.email,
         name: user.name,
+        role,
+        roleData, // Data tambahan terkait dengan member atau staff
       },
     });
   } catch (error) {
